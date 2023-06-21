@@ -64,9 +64,11 @@ public class Account {
         balance = (int) ((Math.random() * (50000 - (-50000)) + (-50000)));
     }
 
-    public void blackSwamp() throws Exception{
+    public void blackSwamp(Account ramdomAccount) throws Exception{
         if (blackSwampCount>=1) throw new Exception("Not Black Swamp left");
         blackSwampCount++;
-
+        double previousBalance = this.balance;
+        this.balance = ramdomAccount.getBalance();
+        ramdomAccount.balance = previousBalance;
     }
 }

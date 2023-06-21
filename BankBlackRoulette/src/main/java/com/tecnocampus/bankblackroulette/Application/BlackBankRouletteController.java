@@ -71,13 +71,22 @@ public class BlackBankRouletteController {
         return accountList.stream().map(AccountDTO::new).collect(Collectors.toSet());
     }
 
-    public void BalanceRoulette(String accountId) throws Exception {
+    public void balanceRoulette(String accountId) throws Exception {
         accountRepository.findById(accountId).get().balanceRoulette();
     }
 
-    public void blackSwamp(String accountId){
+    public void blackSwamp(String accountId) throws Exception {
+        Account accountBase = accountRepository.findById(accountId).get();
+        User userBase = accountBase.getUser();
 
+        List<User> userList = userRepository.findAll();
+        Optional<User> randomUser = userList.stream().skip((int)(userList.size() * Math.random())).findFirst();
+        while(userBase.equals(randomUser.get())){
+            randomUser = userList.stream().skip((int)(userList.size() * Math.random())).findFirst();
+        }
+
+        Optional<Account> randomAccount = randomUser.get().getAccounts().stream().skip((int)(randomUser.get().getAccounts().size() * Math.random())).findFirst();
+        accountBase.blackSwamp(randomAccount.get());
     }
-
 
 }

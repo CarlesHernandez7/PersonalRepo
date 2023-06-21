@@ -40,7 +40,15 @@ public class User {
     }
 
     private void checkPassword(String password) throws InvalidParameterException{
-        if (!password.matches("[0-9]+") || password.length() < 8) throw new InvalidParameterException();
+        boolean digit = false;
+        if (password != null && password.length() >= 8) {
+            for (char c : password.toCharArray()) {
+                if (digit == Character.isDigit(c)) {
+                    return;
+                }
+            }
+        }
+        throw new InvalidParameterException();
     }
 
     public String getId() {
