@@ -19,9 +19,9 @@ public class AccountRestController {
         return accountRestController.addAccount(userId, accountDTO);
     }
 
-    @DeleteMapping("/user/{accountId}")
-    public void removeAccount(@PathVariable String accountId){
-        accountRestController.removeAccount(accountId);
+    @DeleteMapping("/user/{userId}/{accountId}")
+    public void removeAccount(@PathVariable String userId, @PathVariable String accountId){
+        accountRestController.removeAccount(userId, accountId);
     }
 
     @GetMapping("/account/{accountId}")
@@ -43,5 +43,4 @@ public class AccountRestController {
     public void blackSwamp(@PathVariable String accountId) throws Exception {
         accountRestController.blackSwamp(accountId);
     }
-
 }

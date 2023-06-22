@@ -1,5 +1,4 @@
 package com.tecnocampus.bankblackroulette.Api;
-
 import com.tecnocampus.bankblackroulette.Application.BlackBankRouletteController;
 import com.tecnocampus.bankblackroulette.Application.dto.UserDTO;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +17,14 @@ public class UserRestController {
         return userRestController.createUser(userDTO);
     }
 
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/users/{userId}")
     public void removeUser(@PathVariable String userId) throws Exception{
-        userRestController.deleteUser(userId);
+        userRestController.removeUser(userId);
     }
 
-    @PutMapping("/user/{userId}")
-    public void updateUser(@PathVariable String userId){
-        userRestController.updateUser(userId);
+    @PutMapping("/user")
+    public UserDTO updateUser(@RequestBody UserDTO userDTO) throws Exception {
+        return userRestController.updateUser(userDTO);
     }
 
     @GetMapping("/user/{userId}")
@@ -33,7 +32,7 @@ public class UserRestController {
         return userRestController.getUser(userId);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public Set<UserDTO> getAllUsers(){
         return userRestController.getAllUsers();
     }

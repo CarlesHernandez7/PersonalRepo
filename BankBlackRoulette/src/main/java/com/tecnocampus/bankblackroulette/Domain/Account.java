@@ -2,18 +2,17 @@ package com.tecnocampus.bankblackroulette.Domain;
 import com.tecnocampus.bankblackroulette.Application.dto.AccountDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.NoArgsConstructor;
-import nonapi.io.github.classgraph.json.Id;
+
 import java.security.InvalidParameterException;
 import java.util.UUID;
 
 @NoArgsConstructor
 @Entity(name = "accounts")
-public class Account {
+public class Account{
     @jakarta.persistence.Id
-    @GeneratedValue
-    @Id
     private String Id = UUID.randomUUID().toString();
 
     @ManyToOne

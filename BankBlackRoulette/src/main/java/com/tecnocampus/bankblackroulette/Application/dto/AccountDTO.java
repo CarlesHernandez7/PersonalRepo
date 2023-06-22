@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AccountDTO {
     private String Id;
-    private User user;
     private String iban;
     private double balance;
     private int balanceRouletteCount;
@@ -17,7 +16,6 @@ public class AccountDTO {
 
     public AccountDTO(Account account){
         this.Id = account.getId();
-        this.user = account.getUser();
         this.iban = account.getIban();
         this.balance = account.getBalance();
         this.balanceRouletteCount = account.getBalanceRouletteCount();
@@ -26,13 +24,6 @@ public class AccountDTO {
 
     public String getId() {
         return Id;
-    }
-
-    public User getUser() throws Exception {
-        if(this.user == null){
-            throw new Exception("the user is null");
-        }
-        return user;
     }
 
     public String getIban() throws Exception {
@@ -58,7 +49,6 @@ public class AccountDTO {
     public String toString() {
         return "AccountDTO{" +
                 "Id='" + Id + '\'' +
-                ", user=" + user +
                 ", iban='" + iban + '\'' +
                 ", balance=" + balance +
                 ", balanceRouletteCount=" + balanceRouletteCount +

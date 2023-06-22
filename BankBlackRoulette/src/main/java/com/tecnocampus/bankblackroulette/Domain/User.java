@@ -17,8 +17,6 @@ import java.util.UUID;
 @Entity(name = "users")
 public class User {
     @jakarta.persistence.Id
-    @GeneratedValue
-    @Id
     private String Id = UUID.randomUUID().toString();
 
     private String email;
@@ -77,6 +75,14 @@ public class User {
 
     public List<Account> getAccounts(){
         return accounts;
+    }
+
+    public void deleteAccounts(){
+        accounts = new ArrayList<>();
+    }
+
+    public void deleteAccount(Account account){
+        accounts.remove(account);
     }
 
     public void setEmail(String email) {

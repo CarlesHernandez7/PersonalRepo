@@ -29,27 +29,38 @@ public class BlackBankRouletteController {
         return new UserDTO(user);
     }
 
-    public void deleteUser(String userId){
-        Optional<User> user = userRepository.findById(userId);
-        List<Account> accountList = accountRepository.findAllByUser(user.get());
+    public void removeUser(String userId){
+        User user = userRepository.findById(userId).get();
+        List<Account> accountList = accountRepository.findAllByUser(user);
+        user.deleteAccounts();
         accountRepository.deleteAll(accountList);
         userRepository.deleteById(userId);
     }
 
     public AccountDTO addAccount(String userId, AccountDTO accountDTO) throws Exception {
-        Optional<User> user = userRepository.findById(userId);
-        Account account = new Account(accountDTO, user.get());
-        user.get().addAccount(account);
+        User user = userRepository.findById(userId).get();
+        Account account = new Account(accountDTO, user);
+        user.addAccount(account);
         accountRepository.save(account);
+        userRepository.save(user);
         return new AccountDTO(account);
     }
 
-    public void removeAccount(String accountId){
+    public void removeAccount(String userId, String accountId){
+        User user = userRepository.findById(userId).get();
+        Account account = accountRepository.findById(accountId).get();
+        user.deleteAccount(account);
         accountRepository.deleteById(accountId);
+        userRepository.save(user);
     }
 
-    public void updateUser(String userId){
-
+    public UserDTO updateUser(UserDTO userDTO) throws Exception {
+        User user = userRepository.findById(userDTO.getId()).get();
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        userRepository.save(user);
+        return new UserDTO(user);
     }
 
     public UserDTO getUser(String userId){
@@ -66,13 +77,15 @@ public class BlackBankRouletteController {
     }
 
     public Set<AccountDTO> getAllAccounts(String userId) throws Exception{
-        Optional<User> user = userRepository.findById(userId);
-        List<Account> accountList = accountRepository.findAllByUser(user.get());
+        User user = userRepository.findById(userId).get();
+        List<Account> accountList = accountRepository.findAllByUser(user);
         return accountList.stream().map(AccountDTO::new).collect(Collectors.toSet());
     }
 
     public void balanceRoulette(String accountId) throws Exception {
-        accountRepository.findById(accountId).get().balanceRoulette();
+        Account account = accountRepository.findById(accountId).get();
+        account.balanceRoulette();
+        accountRepository.save(account);
     }
 
     public void blackSwamp(String accountId) throws Exception {
@@ -80,13 +93,17 @@ public class BlackBankRouletteController {
         User userBase = accountBase.getUser();
 
         List<User> userList = userRepository.findAll();
-        Optional<User> randomUser = userList.stream().skip((int)(userList.size() * Math.random())).findFirst();
-        while(userBase.equals(randomUser.get())){
-            randomUser = userList.stream().skip((int)(userList.size() * Math.random())).findFirst();
+        User randomUser = userList.stream().skip((int)(userList.size() * Math.random())).findFirst().get();
+        while(userBase.equals(randomUser)){
+            randomUser = userList.stream().skip((int)(userList.size() * Math.random())).findFirst().get();
         }
+        Account randomAccount = randomUser.getAccounts().stream().skip((int)(randomUser.getAccounts().size() * Math.random())).findFirst().get();
+        accountBase.blackSwamp(randomAccount);
 
-        Optional<Account> randomAccount = randomUser.get().getAccounts().stream().skip((int)(randomUser.get().getAccounts().size() * Math.random())).findFirst();
-        accountBase.blackSwamp(randomAccount.get());
+        accountRepository.save(accountBase);
+        accountRepository.save(randomAccount);
+        userRepository.save(userBase);
+        userRepository.save(randomUser);
     }
 
 }
